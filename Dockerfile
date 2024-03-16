@@ -1,4 +1,4 @@
-FROM golang:1.20-alpine AS doh-builder
+FROM golang:1.22.1-alpine AS doh-builder
 LABEL maintainer="Xueyuan, Jiang <alexxyjiang@gmail.com>"
 
 RUN apk add --no-cache git make jq curl
