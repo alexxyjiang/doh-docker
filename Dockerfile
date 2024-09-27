@@ -1,11 +1,11 @@
-FROM golang:1.22.1-alpine AS doh-builder
+FROM golang:1.23-alpine AS doh-builder
 LABEL maintainer="Xueyuan, Jiang <alexxyjiang@gmail.com>"
-
-RUN apk add --no-cache git make jq curl
+ENV LANG="C.UTF-8" LC_ALL="C.UTF-8"
+RUN apk update \
+  && apk add --no-cache git make jq curl
 WORKDIR /src
-
 RUN set -x ;\
-    DOH_VERSION_LATEST="$(curl -s https://api.github.com/repos/m13253/dns-over-https/tags|jq -r '.[0].name')" \
+    DOH_VERSION_LATEST="$(curl -s https://api.github.com/repos/m13253/dns-over-https/tags | jq -r '.[0].name')" \
     && curl -L "https://github.com/m13253/dns-over-https/archive/${DOH_VERSION_LATEST}.zip" -o doh.zip \
     && unzip doh.zip \
     && rm doh.zip \
@@ -15,7 +15,7 @@ RUN set -x ;\
     && cp doh-server/doh-server /dist/doh-server \
     && echo ${DOH_VERSION_LATEST} > /dist/doh-server.version
 
-FROM alpine:3.19
+FROM alpine:3.20
 COPY --from=doh-builder /dist /server
 COPY ./doh-server.conf /server/doh-server.conf
 CMD [ "/server/doh-server", "-conf", "/server/doh-server.conf" ]
