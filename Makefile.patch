@@ -1,0 +1,16 @@
+diff --git a/Makefile b/Makefile
+index eb70f64..a7b0110 100644
+--- a/Makefile
++++ b/Makefile
+@@ -3,9 +3,9 @@
+ PREFIX = /usr/local
+
+ ifeq ($(GOROOT),)
+-GOBUILD = go build -ldflags "-s -w"
++GOBUILD = GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags "-s -w"
+ else
+-GOBUILD = $(GOROOT)/bin/go build -ldflags "-s -w"
++GOBUILD = GOOS=$(GOOS) GOARCH=$(GOARCH) $(GOROOT)/bin/go build -ldflags "-s -w"
+ endif
+
+ ifeq ($(shell uname),Darwin)
