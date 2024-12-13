@@ -1,4 +1,4 @@
-FROM --platform=${BUILDPLATFORM} golang:1.23-alpine AS doh-builder
+FROM --platform=${BUILDPLATFORM} golang:1.23-alpine3.21 AS doh-builder
 LABEL maintainer="Xueyuan, Jiang <alexxyjiang@gmail.com>"
 ENV LANG="C.UTF-8" LC_ALL="C.UTF-8"
 RUN apk update \
@@ -17,7 +17,7 @@ RUN cd /src/dns-over-https* \
     && mkdir /dist \
     && cp doh-server/doh-server /dist/doh-server
 
-FROM alpine:3.20
+FROM alpine:3.21
 COPY --from=doh-builder /dist /server
 COPY ./doh-server.conf /server/doh-server.conf
 CMD [ "/server/doh-server", "-conf", "/server/doh-server.conf" ]
